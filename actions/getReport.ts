@@ -1,3 +1,4 @@
+"use server"
 import { oauth, youtubeAnalytics } from "@/lib/google";
 import getAccessToken from "./getAccessToken";
 const getReport = async (metrics: string, dateString: string) => {

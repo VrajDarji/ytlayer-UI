@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User{
+  id String @id @default(uuid())
+  userId String @unique
+  name String
+  email String @db.Text
+  channels Channels[]
+  members Member[]
+  created_At DateTime @default(now())
+  updated_At DateTime @updatedAt
+}
+
+model Channels{
+  id String @id @default(uuid())
+  name String
+  channelId String @unique
+  imageUrl String @db.Text
+  inviteCode String @unique
+  userId String
+  user User @relation(fields: [userId],references: [id],onDelete: Cascade)
+  members Member[]
+  created_At DateTime @default(now())
+  updated_At DateTime @updatedAt
+  @@index([userId])
+}
+
+enum MemberRole{
+  CREATOR
+  MANAGER
+  EDITOR
+  GUEST
+}
+
+model Member{
+  id String @id @default(uuid())
+  role MemberRole @default(GUEST)
+  userId String
+  user User @relation(fields: [userId],references: [id],onDelete: Cascade)
+  channelId String
+  channel Channels @relation(fields: [channelId],references: [id],onDelete: Cascade)
+  created_At DateTime @default(now())
+  updated_At DateTime @updatedAt
+  @@index([userId])
+  @@index([channelId])
+}

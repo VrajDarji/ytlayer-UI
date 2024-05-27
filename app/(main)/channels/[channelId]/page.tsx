@@ -8,8 +8,9 @@ import getVideoStats from "@/actions/getVideoStats";
 import { youtube_v3 } from "googleapis";
 import getChannelStats from "@/actions/getChannelStats";
 import getReport from "@/actions/getReport";
+import Sidebar from "@/components/Sidebar";
 
-const Page = async () => {
+const Page = async ({ params }: { params: { channelId: string } }) => {
   const videoStats = await (await getVideoStats()).VideoStats;
   const formattedVideoStats: VideoColumnProps[] = videoStats.map(
     (e: youtube_v3.Schema$Video) => ({
@@ -52,30 +53,32 @@ const Page = async () => {
     { tag: "average View Duration", value: averageViewDuration.toString() },
   ];
   return (
-    <div className="flex flex-col gap-y-6 w-full">
-      <div className="flex flex-row items-center">
-        <h1 className="text-2xl font-bold text-[#100F34] dark:text-white">
-          Dashboard
-        </h1>
-        <div className="ml-auto">
+    <>
+      <div className="flex flex-col gap-y-6 w-full">
+        <div className="flex flex-row items-center">
+          <h1 className="text-2xl font-bold text-[#100F34] dark:text-white">
+            Dashboard
+          </h1>
+          {/* <div className="ml-auto">
           <CalendarData />
+        </div> */}
+        </div>
+        <div>
+          <GridColumns data={data} />
+        </div>
+        <div className="grid w-full md:grid-cols-3 grid-cols-1  gap-x-6 gap-y-4">
+          <div className="md:col-span-2">
+            <ChartComponent />
+          </div>
+          <div className="w-full h-full bg-white dark:bg-black rounded-md shadow-md p-6"></div>
+        </div>
+        <div className="grid w-full md:grid-cols-3 grid-cols-1 gap-x-6 gap-y-4">
+          <div className="md:col-span-2 w-full rounded-md shadow-md p-6 flex flex-col bg-white dark:bg-black">
+            <VideoTableClient data={formattedVideoStats} />
+          </div>
         </div>
       </div>
-      <div>
-        <GridColumns data={data} />
-      </div>
-      <div className="grid w-full grid-cols-3 gap-x-6">
-        <div className="col-span-2">
-          <ChartComponent />
-        </div>
-        <div className="w-full h-full bg-white dark:bg-black rounded-md shadow-md p-6"></div>
-      </div>
-      <div className="grid w-full grid-cols-3 gap-x-6">
-        <div className="col-span-2 w-full rounded-md shadow-md p-6 flex flex-col bg-white dark:bg-black">
-          <VideoTableClient data={formattedVideoStats} />
-        </div>
-      </div>
-    </div>
+    </>
   );
 };
 

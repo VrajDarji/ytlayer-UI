@@ -61,7 +61,7 @@ const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuItem
             onClick={() => {
-              router.push(`/channels/${params.channelId}/videos/${data.id}`);
+              router.push(`/channels/${params.channelId}/uploads/${data.id}`);
             }}
           >
             <View className="mr-2 h-4 w-4" />
@@ -70,7 +70,7 @@ const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuItem
             onClick={() => {
               router.push(
-                `/channels/${params.channelId}/videos/${data.id}/update`
+                `/channels/${params.channelId}/uploads/${data.id}/update`
               );
             }}
           >

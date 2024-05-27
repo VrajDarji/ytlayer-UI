@@ -47,7 +47,7 @@ const iconColors: Record<Tag, string> = {
 
 const GridColumns: React.FC<GridColumnsProps> = ({ data }) => {
   return (
-    <div className="grid grid-cols-4 gap-x-6">
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-6 gap-y-4">
       {data.map((item) => {
         if (!isTag(item.tag)) {
           return null;

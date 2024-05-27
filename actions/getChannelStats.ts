@@ -1,3 +1,4 @@
+"use server"
 import { oauth, youtube } from "@/lib/google";
 import getAccessToken from "./getAccessToken";
 const getChannelStats = async () => {

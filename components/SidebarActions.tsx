@@ -68,9 +68,9 @@ const SidebarActions = () => {
           key={item.tag}
           href={item.href}
           className={cn(
-            "flex flex-row items-center gap-x-4 text-muted-foreground hover:bg-gray-100 dark:hover:bg-gray-600 px-3 py-2 rounded-md",
+            "flex flex-row items-center gap-x-4 text-muted-foreground hover:bg-gray-100 dark:hover:bg-zinc-700 px-3 py-2 rounded-md",
             item.isActive &&
-              "text-indigo-500 bg-gray-200 dark:bg-zinc-800 font-mediu hover:bg-gray-200 dark:hover:bg-gray-800"
+              "text-indigo-500 bg-gray-200 dark:bg-zinc-800 font-mediu hover:bg-gray-200 dark:hover:bg-zinc-800"
           )}
         >
           {item.icon}

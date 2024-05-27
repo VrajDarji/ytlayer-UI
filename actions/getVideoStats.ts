@@ -1,3 +1,4 @@
+"use server"
 import { oauth, youtube } from "@/lib/google";
 import getAccessToken from "./getAccessToken";
 const getVideoStats = async () => {
@@ -29,7 +30,6 @@ const getVideoStats = async () => {
       id: videoIds,
     });
     const response: any = [];
-    console.log(videosResponse.data);
     videosResponse.data.items?.map((item) => {
       const schema: {
         snippet: any;

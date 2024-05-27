@@ -4,6 +4,7 @@ import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/provider/ThemeProvider";
+import ModalProvider from "@/provider/ModalProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,13 +22,9 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className={inter.className}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme={"system"}
-            enableSystem
-            disableTransitionOnChange
-          >
+          <ThemeProvider attribute="class" defaultTheme={"system"} enableSystem>
             {children}
+            <ModalProvider />
           </ThemeProvider>
         </body>
       </html>

@@ -1,40 +1,36 @@
 "use client";
 
-import * as React from "react";
-import { Moon, Sun } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
-
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Moon, Sun } from "lucide-react";
 
 export function ModeToggle() {
-  const { setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
+  const [isLight, setIsLight] = useState(theme !== "dark");
+
+  useEffect(() => {
+    setIsLight(theme !== "dark");
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(isLight ? "dark" : "light");
+  };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
-          <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          <span className="sr-only">Toggle theme</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
-          Light
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
-          Dark
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
-          System
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="flex flex-row items-center gap-x-2 ml-auto">
+      <div
+        className="relative flex items-center p-3 bg-gray-200 dark:bg-zinc-800 rounded-3xl w-14 cursor-pointer transition-all duration-300"
+        onClick={toggleTheme}
+      >
+        <div
+          className={`absolute h-4 w-4 rounded-full transition-transform duration-300 ${
+            isLight
+              ? "bg-white transform -translate-x-2"
+              : "bg-gray-200 transform translate-x-6"
+          }`}
+        ></div>
+      </div>
+      <div>{isLight ? <Sun size={20} /> : <Moon size={20} />}</div>
+    </div>
   );
 }

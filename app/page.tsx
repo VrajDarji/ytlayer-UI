@@ -1,11 +1,24 @@
-import { auth } from "@clerk/nextjs";
-import Image from "next/image";
+import { db } from "@/lib/db";
+import { intitialProfile } from "@/lib/initialProfile";
 import { redirect } from "next/navigation";
-
+import IntiailModal from "@/components/Modals/InitialModal";
 export default async function Home() {
-  const { userId } = auth();
-  if (userId) {
-    return redirect("/channels/ab123");
+  const profile = await intitialProfile();
+  const channel = await db.channels.findFirst({
+    where: {
+      members: {
+        some: {
+          userId: profile.id,
+        },
+      },
+    },
+  });
+  if (channel) {
+    return redirect(`/channels/${channel.channelId}`);
   }
-  return null;
+  return (
+    <div>
+      <IntiailModal />
+    </div>
+  );
 }
