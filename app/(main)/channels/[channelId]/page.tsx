@@ -9,9 +9,18 @@ import { youtube_v3 } from "googleapis";
 import getChannelStats from "@/actions/getChannelStats";
 import getReport from "@/actions/getReport";
 import Sidebar from "@/components/Sidebar";
+import currentProfile from "@/lib/currentProfile";
+import { db } from "@/lib/db";
+import { redirect } from "next/navigation";
 
 const Page = async ({ params }: { params: { channelId: string } }) => {
-  const videoStats = await (await getVideoStats()).VideoStats;
+  const user = await currentProfile();
+  const channel = await db.channels.findFirst({
+    where: {
+      channelId: params.channelId,
+    },
+  });
+  const videoStats = await (await getVideoStats(params.channelId)).VideoStats;
   const formattedVideoStats: VideoColumnProps[] = videoStats.map(
     (e: youtube_v3.Schema$Video) => ({
       id: e.id,
@@ -24,14 +33,22 @@ const Page = async ({ params }: { params: { channelId: string } }) => {
       },
     })
   );
-  const channelStats = (await getChannelStats()).channelStats;
+  const member = await db.member.findFirst({
+    where: {
+      userId: user?.id,
+      channelId: channel?.id,
+    },
+  });
+  const channelStats = (await getChannelStats(params.channelId)).channelStats;
   const estimatedMinutesWatchedRows = await getReport(
     "estimatedMinutesWatched",
-    "allTime"
+    "allTime",
+    params.channelId
   );
   const averageViewDurationRows = await getReport(
     "averageViewDuration",
-    "allTime"
+    "allTime",
+    params.channelId
   );
   let estimatedMinutesWatched = 0;
   let averageViewDuration = 0;
@@ -52,6 +69,7 @@ const Page = async ({ params }: { params: { channelId: string } }) => {
     },
     { tag: "average View Duration", value: averageViewDuration.toString() },
   ];
+
   return (
     <>
       <div className="flex flex-col gap-y-6 w-full">
@@ -66,12 +84,16 @@ const Page = async ({ params }: { params: { channelId: string } }) => {
         <div>
           <GridColumns data={data} />
         </div>
-        <div className="grid w-full md:grid-cols-3 grid-cols-1  gap-x-6 gap-y-4">
-          <div className="md:col-span-2">
-            <ChartComponent />
-          </div>
-          <div className="w-full h-full bg-white dark:bg-black rounded-md shadow-md p-6"></div>
-        </div>
+        <>
+          {member?.role === "CREATOR" && (
+            <div className="grid w-full md:grid-cols-3 grid-cols-1  gap-x-6 gap-y-4">
+              <div className="md:col-span-2">
+                <ChartComponent />
+              </div>
+              <div className="w-full h-full bg-white dark:bg-black rounded-md shadow-md p-6"></div>
+            </div>
+          )}
+        </>
         <div className="grid w-full md:grid-cols-3 grid-cols-1 gap-x-6 gap-y-4">
           <div className="md:col-span-2 w-full rounded-md shadow-md p-6 flex flex-col bg-white dark:bg-black">
             <VideoTableClient data={formattedVideoStats} />

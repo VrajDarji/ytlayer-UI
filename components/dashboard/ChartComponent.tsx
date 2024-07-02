@@ -5,6 +5,7 @@ import SelectDurationDropdown from "../ui/SelectMonthDropdown";
 import SelectTypeDropdown from "../ui/SelectTypeDropdown";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
+import { useParams } from "next/navigation";
 
 const ChartComponent = () => {
   const [valueString, setValueString] = useState<string>("Last Week");
@@ -12,18 +13,24 @@ const ChartComponent = () => {
   const [isLoding, setIsLoading] = useState<boolean>(false);
   const [chartData, setChartData] =
     useState<{ tag: string; value: number }[]>();
+  const params = useParams();
   const onValueChange = (value: string) => {
     setValueString(value);
   };
   const onTypeChange = (value: string) => {
     setTypeString(value);
   };
-  const fetchData = async (metricString: string, dateString: string) => {
+  const fetchData = async (
+    metricString: string,
+    dateString: string,
+    channelId: string
+  ) => {
     try {
       setIsLoading(true);
       const { data } = await axios.post("/api/youtube/report", {
         metrics: metricString,
         dateString,
+        channelId,
       });
       const formattedData = data?.rows?.map((r: any) => ({
         tag: r[0],
@@ -41,8 +48,8 @@ const ChartComponent = () => {
     }
   };
   useEffect(() => {
-    fetchData(typeString, valueString);
-  }, [typeString, valueString]);
+    fetchData(typeString, valueString, params.channelId as string);
+  }, [typeString, valueString, params.channelId]);
   return (
     <div className="bg-white dark:bg-black rounded-md shadow-md flex flex-col gap-y-6 p-6">
       <div className="w-full flex flex-row items-center">

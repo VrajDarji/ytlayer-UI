@@ -1,7 +1,7 @@
-"use server"
+"use server";
 import { oauth, youtube } from "@/lib/google";
 import getAccessToken from "./getAccessToken";
-const getVideoStats = async () => {
+const getVideoStats = async (channelId: string) => {
   const accessToken = await getAccessToken();
   oauth.setCredentials({
     access_token: accessToken,
@@ -9,7 +9,7 @@ const getVideoStats = async () => {
   try {
     const channelList = await youtube.channels.list({
       part: ["contentDetails", "snippet", "statistics"],
-      mine: true,
+      id: [channelId],
     });
     const uploadsId =
       channelList.data.items?.[0].contentDetails?.relatedPlaylists?.uploads;

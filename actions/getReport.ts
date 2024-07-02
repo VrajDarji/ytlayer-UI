@@ -1,7 +1,11 @@
-"use server"
+"use server";
 import { oauth, youtubeAnalytics } from "@/lib/google";
 import getAccessToken from "./getAccessToken";
-const getReport = async (metrics: string, dateString: string) => {
+const getReport = async (
+  metrics: string,
+  dateString: string,
+  channelId: string
+) => {
   const accessToken = await getAccessToken();
   oauth.setCredentials({
     access_token: accessToken,
@@ -23,7 +27,7 @@ const getReport = async (metrics: string, dateString: string) => {
 
   try {
     const { data } = await youtubeAnalytics.reports.query({
-      ids: "channel==MINE",
+      ids: `channel==mine`,
       startDate: formattedStartDate,
       endDate: formattedEndDate,
       metrics: metrics,

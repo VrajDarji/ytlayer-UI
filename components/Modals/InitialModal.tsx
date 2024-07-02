@@ -26,7 +26,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Loader } from "lucide-react";
-import getChannelStats from "@/actions/getChannelStats";
+import getInitialChannelStats from "@/actions/getInitialChannel";
 
 const formSchema = z.object({
   id: z.string().min(1),
@@ -64,7 +64,7 @@ const IntialModal = () => {
   const fetchChannels = async () => {
     try {
       setIsLoading(true);
-      const data = await getChannelStats();
+      const data = await getInitialChannelStats();
       const channelStats = data.channelStats?.[0];
       form.setValue("id", channelStats?.id as string);
       form.setValue(
